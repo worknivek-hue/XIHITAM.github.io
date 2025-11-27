@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - XINIGA STORE</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #0d0d0d;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .back-btn {
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* CONTENT */
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .game-card {
+            background: linear-gradient(to bottom, #222, #000);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .game-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background-size: cover;
+            background-position: center;
+            background-color: #333;
+        }
+
+        .game-info h2 {
+            margin: 0 0 5px;
+            font-size: 20px;
+        }
+
+        .game-info p {
+            margin: 0;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .payment-section {
+            background: #111;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        /* FORM INPUT */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #5a20cb;
+        }
+
+        .input-group input.error {
+            border-color: #e74c3c;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* NOMINAL OPTIONS */
+        .nominal-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nominal-option {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nominal-option:hover {
+            background: #2a2a2a;
+            transform: translateY(-2px);
+        }
+
+        .nominal-option.selected {
+            background: #333;
+            border-color: #5a20cb;
+            box-shadow: 0 0 0 1px #5a20cb;
+        }
+
+        .nominal-amount {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .nominal-price {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        /* PAYMENT METHODS */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .payment-method {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-method:hover {
+            background: #2a2a2a;
+            transform: translateY(-2px);
+        }
+
+        .payment-method.selected {
+            background: #333;
+            border-color: #5a20cb;
+            box-shadow: 0 0 0 1px #5a20cb;
+        }
+
+        .payment-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .payment-name {
+            font-size: 12px;
+        }
+
+        /* SUMMARY */
+        .summary {
+            background: #111;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+        }
+
+        /* BUTTON */
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #4a90e2, #5a20cb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pay-button:hover {
+            background: linear-gradient(to right, #5a20cb, #4a90e2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(90, 32, 203, 0.4);
+        }
+
+        .pay-button:active {
+            transform: translateY(0);
+        }
+
+        .pay-button.loading {
+            pointer-events: none;
+        }
+
+        .pay-button.loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #111;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal h3 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .modal p {
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-button.confirm {
+            background: #5a20cb;
+            color: white;
+        }
+
+        .modal-button.cancel {
+            background: #333;
+            color: white;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .nominal-options, .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">XINIGA STORE</div>
+    <div style="width: 60px;"></div> <!-- Spacer untuk balance -->
+</header>
+
+<!-- CONTENT -->
+<div class="container">
+    <!-- GAME CARD -->
+    <div class="game-card">
+        <div class="game-header">
+            <div class="game-icon" id="gameIcon"></div>
+            <div class="game-info">
+                <h2 id="gameTitle">Mobile Legends</h2>
+                <p id="gameDeveloper">Moonton</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT DETAILS -->
+    <div class="payment-section">
+        <div class="section-title">Detail Pembayaran</div>
+        
+        <div class="input-group">
+            <label for="playerId">ID Player / Username</label>
+            <input type="text" id="playerId" placeholder="Masukkan ID Player atau Username">
+            <div class="error-message" id="playerIdError">ID Player harus diisi</div>
+        </div>
+        
+        <div class="input-group">
+            <label for="serverId">Server ID (Opsional)</label>
+            <input type="text" id="serverId" placeholder="Masukkan Server ID (jika ada)">
+        </div>
+    </div>
+
+    <!-- NOMINAL OPTIONS -->
+    <div class="payment-section">
+        <div class="section-title">Pilih Nominal</div>
+        
+        <div class="nominal-options" id="nominalOptions">
+            <!-- Options akan diisi oleh JavaScript -->
+        </div>
+        
+        <div class="input-group">
+            <label for="customAmount">Atau masukkan jumlah custom</label>
+            <input type="number" id="customAmount" placeholder="Masukkan jumlah">
+            <div class="error-message" id="customAmountError">Jumlah harus lebih dari 0</div>
+        </div>
+    </div>
+
+    <!-- PAYMENT METHODS -->
+    <div class="payment-section">
+        <div class="section-title">Metode Pembayaran</div>
+        
+        <div class="payment-methods" id="paymentMethods">
+            <!-- Methods akan diisi oleh JavaScript -->
+        </div>
+        <div class="error-message" id="paymentMethodError">Pilih metode pembayaran</div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="summary">
+        <div class="section-title">Ringkasan Pesanan</div>
+        
+        <div class="summary-item">
+            <span>Produk:</span>
+            <span id="summaryProduct">-</span>
+        </div>
+        
+        <div class="summary-item">
+            <span>Jumlah:</span>
+            <span id="summaryAmount">-</span>
+        </div>
+        
+        <div class="summary-item">
+            <span>Metode:</span>
+            <span id="summaryMethod">-</span>
+        </div>
+        
+        <div class="summary-item">
+            <span>Biaya Admin:</span>
+            <span id="summaryFee">Rp 0</span>
+        </div>
+        
+        <div class="summary-item summary-total">
+            <span>Total:</span>
+            <span id="summaryTotal">Rp 0</span>
+        </div>
+    </div>
+
+    <!-- PAY BUTTON -->
+    <button class="pay-button" onclick="confirmPayment()">Bayar Sekarang</button>
+</div>
+
+<!-- MODAL KONFIRMASI -->
+<div class="modal" id="confirmationModal">
+    <div class="modal-content">
+        <h3>Konfirmasi Pembayaran</h3>
+        <p>Apakah Anda yakin ingin melanjutkan pembayaran?</p>
+        <div class="modal-buttons">
+            <button class="modal-button confirm" onclick="processPayment()">Ya, Lanjutkan</button>
+            <button class="modal-button cancel" onclick="closeModal()">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SUKSES -->
+<div class="modal" id="successModal">
+    <div class="modal-content">
+        <h3>Pembayaran Berhasil!</h3>
+        <p>Item akan dikirim ke akun Anda dalam waktu 5 menit.</p>
+        <div class="modal-buttons">
+            <button class="modal-button confirm" onclick="redirectToHome()">Kembali ke Beranda</button>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    &copy; 2023 XINIGA STORE. Semua hak dilindungi.
+</footer>
+
+<script>
+    // Data game dan pembayaran
+    const gameData = {
+        "mobile-legends": {
+            title: "Mobile Legends",
+            developer: "Moonton",
+            icon: "https://images.onesearch.com/ya/images/9a1b9b8b1d4e4b4a8f4e4b4a8f4e4b4a.jpeg",
+            nominals: [
+                { amount: "86 Diamond", price: 20000 },
+                { amount: "172 Diamond", price: 40000 },
+                { amount: "257 Diamond", price: 60000 },
+                { amount: "344 Diamond", price: 80000 },
+                { amount: "429 Diamond", price: 100000 },
+                { amount: "514 Diamond", price: 120000 }
+            ]
+        },
+        "valorant": {
+            title: "VALORANT",
+            developer: "Riot Games",
+            icon: "https://images.onesearch.com/ya/images/9a1b9b8b1d4e4b4a8f4e4b4a8f4e4b4a.jpeg",
+            nominals: [
+                { amount: "125 Points", price: 15000 },
+                { amount: "420 Points", price: 50000 },
+                { amount: "700 Points", price: 80000 },
+                { amount: "1375 Points", price: 150000 },
+                { amount: "2400 Points", price: 250000 },
+                { amount: "4000 Points", price: 400000 }
+            ]
+        },
+        "free-fire": {
+            title: "Free Fire",
+            developer: "Garena",
+            icon: "https://images.onesearch.com/ya/images/9a1b9b8b1d4e4b4a8f4e4b4a8f4e4b4a.jpeg",
+            nominals: [
+                { amount: "70 Diamond", price: 10000 },
+                { amount: "140 Diamond", price: 20000 },
+                { amount: "355 Diamond", price: 50000 },
+                { amount: "720 Diamond", price: 100000 },
+                { amount: "1450 Diamond", price: 200000 },
+                { amount: "2180 Diamond", price: 300000 }
+            ]
+        },
+        "pubg-mobile": {
+            title: "PUBG Mobile",
+            developer: "Tencent Games",
+            icon: "https://images.onesearch.com/ya/images/9a1b9b8b1d4e4b4a8f4e4b4a8f4e4b4a.jpeg",
+            nominals: [
+                { amount: "60 UC", price: 15000 },
+                { amount: "325 UC", price: 80000 },
+                { amount: "660 UC", price: 160000 },
+                { amount: "1800 UC", price: 400000 },
+                { amount: "3850 UC", price: 800000 },
+                { amount: "8100 UC", price: 1600000 }
+            ]
+        }
+    };
+
+    const paymentMethods = [
+        { id: "gopay", name: "GoPay", icon: "💰" },
+        { id: "ovo", name: "OVO", icon: "💳" },
+        { id: "dana", name: "DANA", icon: "💸" },
+        { id: "linkaja", name: "LinkAja", icon: "📱" },
+        { id: "bank-bca", name: "BCA", icon: "🏦" },
+        { id: "bank-bri", name: "BRI", icon: "🏦" },
+        { id: "bank-mandiri", name: "Mandiri", icon: "🏦" },
+        { id: "bank-bni", name: "BNI", icon: "🏦" },
+        { id: "indomaret", name: "Indomaret", icon: "🏪" },
+        { id: "alfamart", name: "Alfamart", icon: "🏪" }
+    ];
+
+    // State aplikasi
+    let selectedGame = "mobile-legends";
+    let selectedNominal = null;
+    let selectedPayment = null;
+    let customAmount = 0;
+
+    // Fungsi untuk kembali ke halaman sebelumnya
+    function goBack() {
+        window.history.back();
+    }
+
+    // Fungsi untuk memuat data game berdasarkan parameter URL
+    function loadGameData() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameParam = urlParams.get('game');
+        
+        if (gameParam && gameData[gameParam]) {
+            selectedGame = gameParam;
+        }
+        
+        const game = gameData[selectedGame];
+        document.getElementById('gameTitle').textContent = game.title;
+        document.getElementById('gameDeveloper').textContent = game.developer;
+        document.getElementById('gameIcon').style.backgroundImage = `url('${game.icon}')`;
+        
+        // Update ringkasan produk
+        document.getElementById('summaryProduct').textContent = game.title;
+        
+        // Render nominal options
+        renderNominalOptions(game.nominals);
+        
+        // Render payment methods
+        renderPaymentMethods();
+    }
+
+    // Fungsi untuk merender nominal options
+    function renderNominalOptions(nominals) {
+        const container = document.getElementById('nominalOptions');
+        container.innerHTML = '';
+        
+        nominals.forEach((nominal, index) => {
+            const option = document.createElement('div');
+            option.className = 'nominal-option';
+            option.innerHTML = `
+                <div class="nominal-amount">${nominal.amount}</div>
+                <div class="nominal-price">Rp ${nominal.price.toLocaleString('id-ID')}</div>
+            `;
+            
+            option.addEventListener('click', () => {
+                selectNominal(index, nominal);
+            });
+            
+            container.appendChild(option);
+        });
+        
+        // Pilih nominal pertama secara default
+        if (nominals.length > 0) {
+            selectNominal(0, nominals[0]);
+        }
+    }
+
+    // Fungsi untuk memilih nominal
+    function selectNominal(index, nominal) {
+        // Hapus seleksi sebelumnya
+        document.querySelectorAll('.nominal-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        // Tambah seleksi pada yang dipilih
+        document.querySelectorAll('.nominal-option')[index].classList.add('selected');
+        
+        selectedNominal = nominal;
+        customAmount = 0;
+        document.getElementById('customAmount').value = '';
+        
+        updateSummary();
+    }
+
+    // Fungsi untuk merender metode pembayaran
+    function renderPaymentMethods() {
+        const container = document.getElementById('paymentMethods');
+        container.innerHTML = '';
+        
+        paymentMethods.forEach((method, index) => {
+            const option = document.createElement('div');
+            option.className = 'payment-method';
+            option.innerHTML = `
+                <div class="payment-icon">${method.icon}</div>
+                <div class="payment-name">${method.name}</div>
+            `;
+            
+            option.addEventListener('click', () => {
+                selectPaymentMethod(index, method);
+            });
+            
+            container.appendChild(option);
+        });
+        
+        // Pilih metode pertama secara default
+        if (paymentMethods.length > 0) {
+            selectPaymentMethod(0, paymentMethods[0]);
+        }
+    }
+
+    // Fungsi untuk memilih metode pembayaran
+    function selectPaymentMethod(index, method) {
+        // Hapus seleksi sebelumnya
+        document.querySelectorAll('.payment-method').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        // Tambah seleksi pada yang dipilih
+        document.querySelectorAll('.payment-method')[index].classList.add('selected');
+        
+        selectedPayment = method;
+        
+        updateSummary();
+    }
+
+    // Fungsi untuk memperbarui ringkasan
+    function updateSummary() {
+        const summaryAmount = document.getElementById('summaryAmount');
+        const summaryMethod = document.getElementById('summaryMethod');
+        const summaryFee = document.getElementById('summaryFee');
+        const summaryTotal = document.getElementById('summaryTotal');
+        
+        let amountText = '-';
+        let total = 0;
+        
+        if (selectedNominal) {
+            amountText = selectedNominal.amount;
+            total = selectedNominal.price;
+        } else if (customAmount > 0) {
+            amountText = `${customAmount} Diamond`;
+            total = customAmount;
+        }
+        
+        summaryAmount.textContent = amountText;
+        summaryMethod.textContent = selectedPayment ? selectedPayment.name : '-';
+        
+        // Hitung biaya admin (misalnya 2% dari total)
+        const fee = Math.round(total * 0.02);
+        summaryFee.textContent = `Rp ${fee.toLocaleString('id-ID')}`;
+        
+        // Total termasuk biaya admin
+        const finalTotal = total + fee;
+        summaryTotal.textContent = `Rp ${finalTotal.toLocaleString('id-ID')}`;
+    }
+
+    // Fungsi untuk validasi form
+    function validateForm() {
+        let isValid = true;
+        
+        // Validasi ID Player
+        const playerId = document.getElementById('playerId').value.trim();
+        if (!playerId) {
+            document.getElementById('playerId').classList.add('error');
+            document.getElementById('playerIdError').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('playerId').classList.remove('error');
+            document.getElementById('playerIdError').style.display = 'none';
+        }
+        
+        // Validasi nominal
+        if (!selectedNominal && customAmount <= 0) {
+            document.getElementById('customAmount').classList.add('error');
+            document.getElementById('customAmountError').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('customAmount').classList.remove('error');
+            document.getElementById('customAmountError').style.display = 'none';
+        }
+        
+        // Validasi metode pembayaran
+        if (!selectedPayment) {
+            document.getElementById('paymentMethodError').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('paymentMethodError').style.display = 'none';
+        }
+        
+        return isValid;
+    }
+
+    // Fungsi untuk menampilkan modal konfirmasi
+    function confirmPayment() {
+        if (validateForm()) {
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+    }
+
+    // Fungsi untuk menutup modal
+    function closeModal() {
+        document.getElementById('confirmationModal').style.display = 'none';
+        document.getElementById('successModal').style.display = 'none';
+    }
+
+    // Fungsi untuk memproses pembayaran
+    function processPayment() {
+        closeModal();
+        
+        // Tampilkan indikator loading
+        const payButton = document.querySelector('.pay-button');
+        payButton.classList.add('loading');
+        payButton.textContent = 'Memproses...';
+        
+        // Simulasi proses pembayaran
+        setTimeout(() => {
+            // Sembunyikan indikator loading
+            payButton.classList.remove('loading');
+            payButton.textContent = 'Bayar Sekarang';
+            
+            // Tampilkan modal sukses
+            document.getElementById('successModal').style.display = 'flex';
+        }, 2000);
+    }
+
+    // Fungsi untuk redirect ke beranda
+    function redirectToHome() {
+        window.location.href = 'xiniga.html';
+    }
+
+    // Event listener untuk input custom amount
+    document.getElementById('customAmount').addEventListener('input', function() {
+        const value = parseInt(this.value) || 0;
+        
+        if (value > 0) {
+            customAmount = value;
+            selectedNominal = null;
+            
+            // Hapus seleksi pada nominal options
+            document.querySelectorAll('.nominal-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            updateSummary();
+        }
+    });
+
+    // Inisialisasi saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        loadGameData();
+    });
+</script>
+
+</body>
+</html>

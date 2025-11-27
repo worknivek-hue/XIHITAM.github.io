@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XINIGA STORE - Top Up Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #0d0d0d;
+            color: white;
+            overflow-x: hidden;
+            touch-action: pan-y;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .menu-icon {
+            font-size: 25px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* SLIDER BANNER PERBAIKAN */
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            height: 50vh;
+            min-height: 300px;
+            max-height: 500px;
+            touch-action: pan-y;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .slider {
+            display: flex;
+            width: 500%;
+            height: 100%;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .slide {
+            width: 20%;
+            height: 100%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        /* DOT INDICATOR */
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .dot.active {
+            background: white;
+            border-color: #333;
+            box-shadow: 0 0 8px white;
+            transform: scale(1.2);
+        }
+
+        /* PROMO BADGE PERBAIKAN */
+        .promo-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 20;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* SLIDE CONTENT OVERLAY PERBAIKAN */
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 25px 20px;
+            color: white;
+            z-index: 15;
+        }
+
+        .slide-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .slide-description {
+            font-size: 16px;
+            opacity: 0.95;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+        }
+
+        /* SECTION DIVIDER DENGAN METEOR BACKGROUND */
+        .section-divider {
+            width: 92%;
+            margin: 30px auto 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 10px;
+            padding: 20px 0;
+            background: rgba(30, 30, 30, 0.8);
+        }
+
+        .meteor-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, white);
+            opacity: 0.6;
+            transform: rotate(45deg);
+            animation: meteor-fall 3s linear infinite;
+            filter: drop-shadow(0 0 4px white);
+        }
+
+        @keyframes meteor-fall {
+            0% {
+                transform: translateY(-100px) translateX(0) rotate(45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh) translateX(-300px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .divider-line {
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, white, transparent);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .divider-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .divider-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+
+        .divider-subtitle {
+            font-size: 14px;
+            color: #aaa;
+            text-align: center;
+            max-width: 80%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* GRID KARTU GAME */
+        .grid {
+            width: 92%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding-bottom: 50px;
+        }
+
+        /* KARTU GAME */
+        .card {
+            background: linear-gradient(to bottom, #222, #000);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: white;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .thumb {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background-size: cover;
+            background-position: center;
+            background-color: #333;
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .label {
+            padding: 10px;
+            background: white;
+            color: black;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .label strong {
+            font-size: 14px;
+        }
+
+        .label small {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">XINIGA STORE</div>
+    <div class="menu-icon">☰</div>
+</header>
+
+<!-- SLIDER DENGAN FOTO FULL TANPA CROP -->
+<div class="slider-container" id="sliderContainer">
+    <div class="slider" id="slider">
+        <!-- Slide 1 -->
+        <div class="slide">
+            <div class="promo-badge">DISKON 20%</div>
+            <img src="ireng.jpg" alt="Promo Mobile Legends">
+            <div class="slide-overlay">
+                <div class="slide-title">Mobile Legends</div>
+                <div class="slide-description">Top up Diamond Dengan Harga Terbaik - Hemat Sampai 20%</div>
+            </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="slide">
+            <div class="promo-badge">BONUS 15%</div>
+            <img src="ppl.jpg" alt="Promo Free Fire">
+            <div class="slide-overlay">
+                <div class="slide-title">Free Fire</div>
+                <div class="slide-description">Dapatkan Bonus Diamond Eksklusif Untuk Member Baru</div>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="slide">
+            <div class="promo-badge">HOT DEAL</div>
+            <img src="gzl.jpg" alt="Promo PUBG Mobile">
+            <div class="slide-overlay">
+                <div class="slide-title">PUBG Mobile</div>
+                <div class="slide-description">UC Murah Dengan Proses Instan - Garansi 100%</div>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="slide">
+            <div class="promo-badge">NEW</div>
+            <img src="vandal.jpg" alt="Promo Valorant">
+            <div class="slide-overlay">
+                <div class="slide-title">Valorant</div>
+                <div class="slide-description">Points Dengan Harga Spesial - Proses Cepat 5 Menit</div>
+            </div>
+        </div>
+        
+        <!-- Slide 5 -->
+        <div class="slide">
+            <div class="promo-badge">LIMITED</div>
+            <img src="HIK.jpg" alt="Promo Genshin Impact">
+            <div class="slide-overlay">
+                <div class="slide-title">HOK</div>
+                <div class="slide-description">Bonus Tokens Eksklusif - Edisi Terbatas</div>
+            </div>
+        </div>
+    </div>
+    <div class="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</div>
+
+<!-- SECTION DIVIDER DENGAN METEOR BACKGROUND -->
+<div class="section-divider" id="popularSection">
+    <div class="meteor-bg" id="meteorBg"></div>
+    <div class="divider-line"></div>
+    <div class="divider-content">
+        <div class="divider-title">POPULER SEKARANG</div>
+    </div>
+    <div class="divider-subtitle">Berikut adalah beberapa produk yang paling populer saat ini.</div>
+    <div class="divider-line"></div>
+</div>
+
+<!-- GRID GAME DENGAN GAMBAR -->
+<div class="grid" id="catalog">
+    <!-- Card 1 - Mobile Legends -->
+    <a class="card" href="pembayaran.html" aria-label="Mobile Legends - pembelian">
+        <div class="thumb" style="background-image:url('ml.jpg')"></div>
+        <div class="badge">Moonton</div>
+        <div class="label">
+            <div style="display:flex;flex-direction:column">
+                <strong>Mobile Legends</strong>
+                <small>Moonton</small>
+            </div>
+            <div style="font-size:13px;font-weight:700">›</div>
+        </div>
+    </a>
+
+    <!-- Card 2 - VALORANT -->
+    <a class="card" href="pembayaran.html" aria-label="VALORANT - pembelian">
+        <div class="thumb" style="background-image:url('vr.jpg')"></div>
+        <div class="badge">Riot Games</div>
+        <div class="label">
+            <div style="display:flex;flex-direction:column">
+                <strong>VALORANT</strong>
+                <small>Riot Games</small>
+            </div>
+            <div style="font-size:13px;font-weight:700">›</div>
+        </div>
+    </a>
+
+    <!-- Card 3 - Free Fire -->
+    <a class="card" href="pembayaran.html" aria-label="Free Fire - pembelian">
+        <div class="thumb" style="background-image:url('ff.jpg')"></div>
+        <div class="badge">Garena</div>
+        <div class="label">
+            <div style="display:flex;flex-direction:column">
+                <strong>Free Fire</strong>
+                <small>Garena</small>
+            </div>
+            <div style="font-size:13px;font-weight:700">›</div>
+        </div>
+    </a>
+
+    <!-- Card 4 - PUBG Mobile -->
+    <a class="card" href="pembayaran.html" aria-label="PUBG Mobile - pembelian">
+        <div class="thumb" style="background-image:url('pubg.jpg')"></div>
+        <div class="badge">Tencent</div>
+        <div class="label">
+            <div style="display:flex;flex-direction:column">
+                <strong>PUBG Mobile</strong>
+                <small>Tencent Games</small>
+            </div>
+            <div style="font-size:13px;font-weight:700">›</div>
+        </div>
+    </a>
+
+    <!-- Card 5 - Honor of Kings -->
+    <a class="card" href="pembayaran.html" aria-label="Honor of Kings - pembelian">
+        <div class="thumb" style="background-image:url('HOK.jpg')"></div>
+        <div class="badge">Tencent</div>
+        <div class="label">
+            <div style="display:flex;flex-direction:column">
+                <strong>Honor of Kings</strong>
+                <small>Tencent Games</small>
+            </div>
+            <div style="font-size:13px;font-weight:700">›</div>
+        </div>
+    </a>
+
+    <!-- Card 6 - Roblox -->
+    <a class="card" href="pembayaran.html" aria-label="Roblox - pembelian">
+        <div class="thumb" style="background-image:url('ciblx.jpg')"></div>
+        <div class="badge">Roblox Corp</div>
+        <div class="label">
+            <div style="display:flex;flex-direction:column">
+                <strong>Roblox - Voucher</strong>
+                <small>Roblox Corporation</small>
+            </div>
+            <div style="font-size:13px;font-weight:700">›</div>
+        </div>
+    </a>
+</div>
+
+<!-- SLIDER SCRIPT DENGAN SWIPE -->
+<script>
+    let slideIndex = 0;
+    const totalSlides = 5;
+    let slideInterval;
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    const slider = document.getElementById("slider");
+    const sliderContainer = document.getElementById("sliderContainer");
+    const dots = document.querySelectorAll(".dot");
+
+    // Fungsi untuk membuat meteor background
+    function createMeteorBackground() {
+        const meteorBg = document.getElementById("meteorBg");
+        
+        for (let i = 0; i < 6; i++) {
+            const meteor = document.createElement("div");
+            meteor.classList.add("meteor");
+            meteor.style.left = Math.random() * 100 + "%";
+            meteor.style.animationDelay = Math.random() * 3 + "s";
+            meteorBg.appendChild(meteor);
+        }
+    }
+
+    function showSlide(index, animate = true) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
+        
+        slideIndex = index;
+        
+        if (animate) {
+            slider.style.transition = "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        } else {
+            slider.style.transition = "none";
+        }
+        
+        slider.style.transform = `translateX(-${slideIndex * 20}%)`;
+
+        dots.forEach(d => d.classList.remove("active"));
+        dots[slideIndex].classList.add("active");
+    }
+
+    function startSlider() {
+        slideInterval = setInterval(() => {
+            showSlide((slideIndex + 1) % totalSlides);
+        }, 5000);
+    }
+
+    function goToSlide(index) {
+        clearInterval(slideInterval);
+        showSlide(index);
+        startSlider();
+    }
+
+    // Touch Events untuk Mobile
+    sliderContainer.addEventListener('touchstart', (e) => {
+        clearInterval(slideInterval);
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        currentX = startX;
+        slider.style.transition = "none";
+    });
+
+    sliderContainer.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        
+        currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        const currentTranslate = -slideIndex * 20;
+        const newTranslate = currentTranslate + (diff / sliderContainer.offsetWidth) * 20;
+        
+        slider.style.transform = `translateX(${newTranslate}%)`;
+    });
+
+    sliderContainer.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const diff = currentX - startX;
+        const threshold = sliderContainer.offsetWidth * 0.1;
+        
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                showSlide(slideIndex - 1);
+            } else {
+                showSlide(slideIndex + 1);
+            }
+        } else {
+            showSlide(slideIndex);
+        }
+        
+        startSlider();
+    });
+
+    // Mouse Events untuk Desktop
+    sliderContainer.addEventListener('mousedown', (e) => {
+        clearInterval(slideInterval);
+        isDragging = true;
+        startX = e.clientX;
+        currentX = startX;
+        slider.style.transition = "none";
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        currentX = e.clientX;
+        const diff = currentX - startX;
+        const currentTranslate = -slideIndex * 20;
+        const newTranslate = currentTranslate + (diff / sliderContainer.offsetWidth) * 20;
+        
+        slider.style.transform = `translateX(${newTranslate}%)`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const diff = currentX - startX;
+        const threshold = sliderContainer.offsetWidth * 0.1;
+        
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                showSlide(slideIndex - 1);
+            } else {
+                showSlide(slideIndex + 1);
+            }
+        } else {
+            showSlide(slideIndex);
+        }
+        
+        startSlider();
+    });
+
+    // Event untuk dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => goToSlide(index));
+    });
+
+    // Inisialisasi
+    document.addEventListener("DOMContentLoaded", function() {
+        createMeteorBackground();
+        startSlider();
+    });
+</script>
+
+</body>
+</html>
